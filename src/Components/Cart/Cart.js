@@ -17,9 +17,36 @@ const Cart = (props) => {
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, item: 1 });
   };
-  const OrderHandler = () => {
-    cartCtx.clearall();
-    setShowOrder(true);
+  const OrderHandler = async () => {
+    const cartItems = cartCtx.items.map((item) => {
+      return {
+        name: item.name,
+        prices: item.price,
+      };
+    });
+
+    try {
+      const response = await fetch("http://localhost:3000/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cartItems),
+      });
+
+      const responseData = await response.json();
+
+      console.log(responseData);
+
+      if (response.ok) {
+        cartCtx.clearall();
+        setShowOrder(true);
+      } else {
+        throw new Error(responseData.error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const cartItems = (

@@ -34,6 +34,7 @@ function App() {
           path="/signup"
           element={<Signup onAuthenticate={authenticateHandler} />}
         />
+        <Route path="/cart" element={Cart} />
         {isAuthenticated ? (
           <Route path="/" element={<Menu2 />} />
         ) : (
