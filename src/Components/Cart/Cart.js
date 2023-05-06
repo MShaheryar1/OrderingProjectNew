@@ -15,15 +15,18 @@ const Cart = (props) => {
     cartCtx.removeItem(id);
   };
   const cartItemAddHandler = (item) => {
-    cartCtx.addItem({ ...item, item: 1 });
+    cartCtx.addItem({ ...item, quantity: 1 });
   };
+
   const OrderHandler = async () => {
     const cartItems = cartCtx.items.map((item) => {
       return {
         name: item.name,
-        prices: item.price,
+        prices: item.price.toFixed(2),
+        amount: item.amount,
       };
     });
+    console.log(cartItems);
 
     try {
       const response = await fetch("http://localhost:3000/cart", {
@@ -57,6 +60,7 @@ const Cart = (props) => {
           name={item.name}
           amount={item.amount}
           price={item.price}
+          quantity={item.quantity}
           onRemove={cartItemRemoveHandler.bind(null, item.id)}
           onAdd={cartItemAddHandler.bind(null, item)}
         />
