@@ -18,9 +18,9 @@ app.post("/signup", (req, res) => {
   const values = [req.body.name, req.body.email, req.body.password];
   db.query(sql, values, (err, data) => {
     if (err) {
-      return res.json({ error: err.message }); // return error message as JSON object
+      return res.json({ error: err.message });
     }
-    return res.json({ success: true }); // return success as JSON object
+    return res.json({ success: true });
   });
 });
 
@@ -41,17 +41,23 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/cart", (req, res) => {
-  const { name, prices } = req.body.item;
-  const sql = "INSERT INTO orders (name, prices) VALUES (?, ?)";
-  const values = [name, prices];
+  const cartItems = req.body;
+  const values = cartItems.map((item) => [item.name, item.prices, item.amount]);
+  const sql = "INSERT INTO orders (name, prices,amount) VALUES ?";
 
-  db.query(sql, values, (err, data) => {
+  db.query(sql, [values], (err, result) => {
     if (err) {
-      console.log(err);
+      console.error(err);
       return res.status(500).json({ error: "Error inserting data" });
     }
-    console.log(data);
-    return res.json({ success: true });
+
+    const insertedRows = values.map((value, index) => ({
+      id: result.insertId + index,
+      name: value[0],
+      prices: value[1],
+    }));
+
+    return res.json({ success: true, data: insertedRows });
   });
 });
 
