@@ -43,21 +43,41 @@ app.post("/login", (req, res) => {
 app.post("/cart", (req, res) => {
   const cartItems = req.body;
   const values = cartItems.map((item) => [item.name, item.prices, item.amount]);
-  const sql = "INSERT INTO orders (name, prices,amount) VALUES ?";
+  const currentDate = new Date();
+  const formattedDate = currentDate
+    .toISOString()
+    .slice(0, 19)
+    .replace("T", " ");
+  const sql = "INSERT INTO orders (name, prices, amount, date) VALUES ?";
+  const rows = values.map((row) => [...row, formattedDate]);
 
-  db.query(sql, [values], (err, result) => {
+  db.query(sql, [rows], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Error inserting data" });
     }
 
-    const insertedRows = values.map((value, index) => ({
+    const insertedRows = rows.map((value, index) => ({
       id: result.insertId + index,
       name: value[0],
       prices: value[1],
+      date: value[3],
+      time: value[3],
     }));
 
     return res.json({ success: true, data: insertedRows });
+  });
+});
+
+app.get("/orders", (req, res) => {
+  const sql = "SELECT * FROM orders";
+  db.query(sql, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Error fetching data" });
+    }
+
+    return res.json({ success: true, data });
   });
 });
 
