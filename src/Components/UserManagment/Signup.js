@@ -16,7 +16,7 @@ function Signup() {
     setErrors(validation(values));
   }, [values]);
 
-  const HandleInput = (event) => {
+  const handleInput = (event) => {
     setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
   };
 
@@ -46,72 +46,65 @@ function Signup() {
   };
 
   return (
-    <div
-      className="d-flex justify-content-center-align-items-center bg-priamry vh-100"
-      style={{ marginTop: "100px", marginLeft: "300px" }}
-    >
-      <div className="bg- white p-3 rounded w-25">
-        <form action="" onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="name">
-              {" "}
-              <strong>Name</strong>
-            </label>
+    <div className="container d-flex justify-content-center align-items-center vh-100">
+      <div className="card shadow p-3 rounded" style={{ maxWidth: "500px" }}>
+        <h2 className="text-center mb-4">Signup</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group mb-3">
+            <label htmlFor="name">Name</label>
             <input
               type="name"
               placeholder="Please enter your name"
               name="name"
-              onChange={HandleInput}
-              className="form-control rounded-0"
+              value={values.name}
+              onChange={handleInput}
+              className={`form-control ${errors.name ? "is-invalid" : ""}`}
             />
-
-            {errors.name && <span className="text-danger">{errors.name}</span>}
+            {errors.name && (
+              <div className="invalid-feedback">{errors.name}</div>
+            )}
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="email">
-              {" "}
-              <strong>Email</strong>
-            </label>
+          <div className="form-group mb-3">
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               placeholder="Please enter your email"
               name="email"
-              onChange={HandleInput}
-              className="form-control rounded-0"
+              value={values.email}
+              onChange={handleInput}
+              className={`form-control ${errors.email ? "is-invalid" : ""}`}
             />
             {errors.email && (
-              <span className="text-danger">{errors.email}</span>
+              <div className="invalid-feedback">{errors.email}</div>
             )}
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="password">
-              {" "}
-              <strong>Password</strong>
-            </label>
+          <div className="form-group mb-3">
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               placeholder="Please enter your password"
               name="password"
-              onChange={HandleInput}
-              className="form-control rounded-0"
+              value={values.password}
+              onChange={handleInput}
+              className={`form-control ${errors.password ? "is-invalid" : ""}`}
             />
-
             {errors.password && (
-              <span className="text-danger">{errors.password}</span>
+              <div className="invalid-feedback">{errors.password}</div>
             )}
           </div>
-          <button type="submit" className="btn btn-success w-100">
-            <strong>Signup</strong>
+
+          <button type="submit" className="btn btn-success w-100 mb-3">
+            Signup
           </button>
 
-          <button
-            className="btn btn-default border w-100"
-            onClick={handleLoginClick}
-          >
-            Login here
-          </button>
+          <div className="text-center">
+            Already have an account?{" "}
+            <button className="btn btn-link p-0" onClick={handleLoginClick}>
+              Login here
+            </button>
+          </div>
         </form>
       </div>
     </div>

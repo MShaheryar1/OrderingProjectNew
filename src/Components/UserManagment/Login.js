@@ -1,7 +1,7 @@
 import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import validation from "./LoginValidation";
-import { useState } from "react";
 
 function Login({ onAuthenticate }) {
   const [values, setValues] = useState({
@@ -33,16 +33,14 @@ function Login({ onAuthenticate }) {
     }
   };
 
-  const handlesignuphandler = () => {
+  const handleSignup = () => {
     navigate("/signup");
   };
 
   return (
-    <div
-      className="d-flex justify-content-center-align-items-center bg-priamry vh-100 paddingTop:50"
-      style={{ marginTop: "100px", marginLeft: "300px" }}
-    >
-      <div className="bg-white p-3 rounded w-25">
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="bg-white p-3 rounded w-25 shadow">
+        <h1 className="text-center font-weight-bold">Login</h1>
         <form action="" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email">
@@ -75,13 +73,14 @@ function Login({ onAuthenticate }) {
               <span className="text-danger">{errors.password}</span>
             )}
           </div>
+
           <button type="submit" className="btn btn-success w-100">
             <strong>Login</strong>
           </button>
 
           <button
             className="btn btn-default border w-100"
-            onClick={handlesignuphandler}
+            onClick={handleSignup}
           >
             Create Account
           </button>

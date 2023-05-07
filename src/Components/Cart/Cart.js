@@ -19,11 +19,14 @@ const Cart = (props) => {
   };
 
   const OrderHandler = async () => {
+    const currentDate = new Date();
     const cartItems = cartCtx.items.map((item) => {
       return {
         name: item.name,
         prices: item.price.toFixed(2),
         amount: item.amount,
+        date: currentDate.toISOString(),
+        dateTime: currentDate.toISOString(),
       };
     });
     console.log(cartItems);
@@ -35,6 +38,8 @@ const Cart = (props) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(cartItems),
+        items: cartItems,
+        dateTime: currentDate.toISOString(),
       });
 
       const responseData = await response.json();
