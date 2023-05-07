@@ -16,9 +16,21 @@ function Orders() {
       });
   }, []);
 
+  const totalAmount = orders.reduce(
+    (acc, order) => acc + order.prices * order.amount,
+    0
+  );
+
   return (
     <div className="orders-container">
-      <h1>Orders</h1>
+      <h1>ORDERS</h1>
+      <div className="order-sale">
+        Sale:{" "}
+        {totalAmount.toLocaleString("en-GB", {
+          style: "currency",
+          currency: "GBP",
+        })}
+      </div>
       <table className="orders-table">
         <thead>
           <tr>
@@ -26,6 +38,8 @@ function Orders() {
             <th>Name</th>
             <th>Price</th>
             <th>Amount</th>
+            <th>Date</th>
+            <th>Time</th>
           </tr>
         </thead>
         <tbody>
@@ -40,6 +54,8 @@ function Orders() {
                 })}
               </td>
               <td>{order.amount}</td>
+              <td>{new Date(order.Date).toLocaleDateString()}</td>
+              <td>{new Date(order.Date).toLocaleTimeString()}</td>
             </tr>
           ))}
         </tbody>
