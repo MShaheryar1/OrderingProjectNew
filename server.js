@@ -11,6 +11,7 @@ const db = mysql.createConnection({
   user: "root",
   password: "",
   database: "user",
+  timezone: "Europe/London",
 });
 
 app.post("/signup", (req, res) => {
