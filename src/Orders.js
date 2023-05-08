@@ -44,8 +44,8 @@ function Orders() {
         </thead>
         <tbody>
           {orders.map((order) => (
-            <tr key={order.id}>
-              <td>{order.id}</td>
+            <tr key={order.userId}>
+              <td>{order.userId}</td>
               <td>{order.name}</td>
               <td>
                 {order.prices.toLocaleString("en-GB", {
@@ -54,8 +54,12 @@ function Orders() {
                 })}
               </td>
               <td>{order.amount}</td>
-              <td>{new Date(order.Date).toLocaleDateString()}</td>
-              <td>{new Date(order.Date).toLocaleTimeString()}</td>
+              <td>
+                {new Date(order.Date).toLocaleDateString("en-GB", {
+                  timeZone: "Europe/London",
+                })}
+              </td>
+              <td>{order.time}</td>
             </tr>
           ))}
         </tbody>
