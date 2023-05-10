@@ -3,6 +3,16 @@ const mysql = require("mysql");
 const cors = require("cors");
 
 const app = express();
+const http = require("http");
+
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
 app.use(cors());
 app.use(express.json());
 
@@ -106,7 +116,18 @@ app.post("/orders/:id/reject", (req, res) => {
     return res.json({ success: true });
   });
 });
+io.on("connection", (socket) => {
+  socket.on("acceptOrder", (orderId) => {
+    console.log(`Order ${orderId} has been accepted`);
+    io.emit("orderAccepted", orderId);
+  });
 
-app.listen(3000, () => {
+  socket.on("rejectOrder", (orderId) => {
+    console.log(`Order ${orderId} has been rejected`);
+    io.emit("orderRejected", orderId);
+  });
+});
+
+server.listen(3000, () => {
   console.log("Server started on port 3000");
 });
