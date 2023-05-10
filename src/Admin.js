@@ -4,7 +4,7 @@ import Orders from "./Orders";
 function AdminPage() {
   return (
     <div>
-      <h1>Food Ordering App </h1>
+      <h1>FOOD ORDERING APP </h1>
       <Orders />
     </div>
   );

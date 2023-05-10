@@ -34,39 +34,32 @@ function Orders() {
     }
   }, [currentDate && currentDate.getDate()]);
 
+  const handleAccept = (orderId) => {
+    const updatedOrders = orders.map((order) => {
+      if (order.OrderId === orderId) {
+        return { ...order, status: "Accepted" };
+      } else {
+        return order;
+      }
+    });
+    setOrders(updatedOrders);
+  };
+
+  const handleReject = (orderId) => {
+    const updatedOrders = orders.map((order) => {
+      if (order.OrderId === orderId) {
+        return { ...order, status: "Rejected" };
+      } else {
+        return order;
+      }
+    });
+    setOrders(updatedOrders);
+  };
+
   const totalAmount = orders.reduce(
     (acc, order) => acc + order.prices * order.amount,
     0
   );
-
-  const handleAccept = (orderId) => {
-    axios
-      .put(`http://localhost:3000/orders/${orderId}`, { status: "accepted" })
-      .then((response) => {
-        setOrders((prevOrders) =>
-          prevOrders.map((order) =>
-            order.userId === orderId ? { ...order, status: "accepted" } : order
-          )
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  const handleReject = (orderId) => {
-    axios
-      .put(`http://localhost:3000/orders/${orderId}`, { status: "accepted" })
-      .then((response) => {
-        setOrders((prevOrders) =>
-          prevOrders.map((order) =>
-            order.userId === orderId ? { ...order, status: "accepted" } : order
-          )
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
 
   return (
     <div className="orders-container">
@@ -88,6 +81,7 @@ function Orders() {
             <th>Date</th>
             <th>Time</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -108,24 +102,22 @@ function Orders() {
                 })}
               </td>
               <td>{order.time}</td>
+              <td>{order.status}</td>
               <td>
-                <div>
-                  <>
-                    <button
-                      className="action-button accept"
-                      onClick={() => handleAccept(order.userId)}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      className="action-button reject"
-                      onClick={() => handleReject(order.OrderId)}
-                    >
-                      Reject
-                    </button>
-                  </>
-
-                  {order.status === "accepted" && <button>On Its Way</button>}
+                <div style={{ display: "flex" }}>
+                  <button
+                    onClick={() => handleAccept(order.OrderId)}
+                    className="action-button accept"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    onClick={() => handleReject(order.OrderId)}
+                    className="action-button reject"
+                    style={{ marginLeft: "10px" }}
+                  >
+                    Reject
+                  </button>
                 </div>
               </td>
             </tr>
