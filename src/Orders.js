@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Orders.css";
+import io from "socket.io-client";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [currentDate, setCurrentDate] = useState();
+  const socket = io("http://localhost:3000");
 
   const hourInMilliseconds = 1000 * 60 * 60;
 
@@ -32,7 +34,7 @@ function Orders() {
     if (currentDate) {
       setOrders([]);
     }
-  }, [currentDate && currentDate.getDate()]);
+  }, [currentDate]);
 
   const handleAccept = (orderId) => {
     const updatedOrders = orders.map((order) => {
@@ -43,6 +45,7 @@ function Orders() {
       }
     });
     setOrders(updatedOrders);
+    socket.emit("acceptOrder", orderId);
   };
 
   const handleReject = (orderId) => {
@@ -54,6 +57,8 @@ function Orders() {
       }
     });
     setOrders(updatedOrders);
+    socket.emit("rejectOrder", orderId);
+    console.log(socket);
   };
 
   const totalAmount = orders.reduce(
