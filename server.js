@@ -81,7 +81,7 @@ app.get("/orders", (req, res) => {
     return res.json({ success: true, data });
   });
 });
-app.post("/Orders/:Id/accept", (req, res) => {
+app.post("/Orders/:id/accept", (req, res) => {
   const orderId = req.params.Orderid;
   const sql = "UPDATE orders SET status = 'accepted' WHERE id = ?";
   db.query(sql, [orderId], (err, result) => {
