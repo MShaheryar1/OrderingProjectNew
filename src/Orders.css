@@ -66,12 +66,12 @@
   cursor: pointer;
 }
 
-.orders-table div button.accept {
+.orders-table td div button.accept {
   background-color: #4CAF50;
   color: white;
 }
 
-.orders-table div button.reject {
+.orders-table td div button.reject {
   background-color: #f44336;
   color: white;
 }
@@ -88,15 +88,7 @@
   cursor: pointer;
 }
 
-.action-button.accept {
-  background-color: #4CAF50;
-  color: white;
-}
 
-.action-button.reject {
-  background-color: #f44336;
-  color: white;
-}
 .parent-container {
   display: flex;
   justify-content: center;
