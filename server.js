@@ -81,6 +81,31 @@ app.get("/orders", (req, res) => {
     return res.json({ success: true, data });
   });
 });
+app.post("/Orders/:Id/accept", (req, res) => {
+  const orderId = req.params.id;
+  const sql = "UPDATE orders SET status = 'accepted' WHERE id = ?";
+  db.query(sql, [orderId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Error updating data" });
+    }
+
+    return res.json({ success: true });
+  });
+});
+
+app.post("/orders/:id/reject", (req, res) => {
+  const orderId = req.params.id;
+  const sql = "UPDATE orders SET status = 'rejected' WHERE id = ?";
+  db.query(sql, [orderId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Error updating data" });
+    }
+
+    return res.json({ success: true });
+  });
+});
 
 app.listen(3000, () => {
   console.log("Server started on port 3000");
