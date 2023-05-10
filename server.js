@@ -82,7 +82,7 @@ app.get("/orders", (req, res) => {
   });
 });
 app.post("/Orders/:Id/accept", (req, res) => {
-  const orderId = req.params.id;
+  const orderId = req.params.Orderid;
   const sql = "UPDATE orders SET status = 'accepted' WHERE id = ?";
   db.query(sql, [orderId], (err, result) => {
     if (err) {
