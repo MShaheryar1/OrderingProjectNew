@@ -31,7 +31,7 @@
   
   .actions button:hover,
   .actions button:active {
-    background-color: #e88080;
+    background-color: #000000;
     border-color: #000000;
     color: white;
   }
