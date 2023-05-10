@@ -24,6 +24,7 @@ function Login({ onAuthenticate }) {
         .then((res) => {
           if (res.data === "Success") {
             onAuthenticate();
+            localStorage.setItem("id", res.data.id); // store the id in local storage
             navigate("/Home"); // navigate to Menu2 component
           } else {
             alert("No record existed");
