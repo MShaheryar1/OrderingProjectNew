@@ -125,7 +125,7 @@ io.on("connection", (socket) => {
     console.log(`Order ${orderId} has been rejected`);
     io.emit("orderRejected", orderId);
   });
-  socket.on("newOrder", () => {
+  socket.on("newOrder", (orderId) => {
     console.log(`You have a new Order `);
     io.emit("newOrder");
   });
