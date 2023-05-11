@@ -72,7 +72,7 @@ const Header = (props) => {
       <div className={classes["main-image"]}>
         <img src={mainheaderImage} alt="A table full of delicious food!" />
       </div>
-      <ToastContainer autoClose={3000} />
+      <ToastContainer autoClose={5000} />
     </Fragment>
   );
 };
