@@ -3,24 +3,29 @@ import classes from "./Header.module.css";
 import mainheaderImage from "../../Assets/burger-sandwich-header.jpg";
 import CartButton from "./Cartbutton";
 import io from "socket.io-client";
-import { FaBell } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Header = (props) => {
   const [notifications, setNotifications] = useState([]);
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [showNotifications] = useState(false);
 
   const handleOrderAccepted = (orderId) => {
+    const message = `Order ${orderId} has been accepted`;
     setNotifications((prevNotifications) => [
       ...prevNotifications,
-      { id: orderId, message: `Order ${orderId} has been accepted` },
+      { id: orderId, message },
     ]);
+    toast.success(message);
   };
 
   const handleOrderRejected = (orderId) => {
+    const message = `Order ${orderId} has been rejected`;
     setNotifications((prevNotifications) => [
       ...prevNotifications,
-      { id: orderId, message: `Order ${orderId} has been rejected` },
+      { id: orderId, message },
     ]);
+    toast.error(message);
   };
 
   const handleRemoveNotification = (notificationId) => {
@@ -31,7 +36,6 @@ const Header = (props) => {
     );
   };
 
-  // Set up socket listeners
   useEffect(() => {
     const socket = io("http://localhost:3000");
     socket.on("orderAccepted", handleOrderAccepted);
@@ -43,45 +47,32 @@ const Header = (props) => {
     };
   }, []);
 
-  const handleNotificationButtonClick = () => {
-    setShowNotifications((prevState) => !prevState);
-  };
+  const notificationList = notifications.map((notification) => (
+    <div
+      key={notification.id}
+      onClick={() => handleRemoveNotification(notification.id)}
+    >
+      {notification.message}
+    </div>
+  ));
 
   return (
     <Fragment>
       <header className={classes.header}>
         <h1>Food Ordering App</h1>
-        <CartButton onClick={props.onShowCart} />
-        <button
-          className={`${classes.button} notificationButton`}
-          onClick={handleNotificationButtonClick}
-        >
-          <div className={`notificationIcon ${showNotifications && "open"}`}>
-            <span className="icon">
-              <FaBell />
-            </span>
-            {notifications.length > 0 && (
-              <span className="badge">{notifications.length}</span>
-            )}
-          </div>
+        <div className={classes["notification-container"]}>
           {showNotifications && (
-            <div className="notificationsContainer openDownwards">
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className="notification"
-                  onClick={() => handleRemoveNotification(notification.id)}
-                >
-                  {notification.message}
-                </div>
-              ))}
+            <div className={classes["notification-list"]}>
+              {notificationList}
             </div>
           )}
-        </button>
+        </div>
+        <CartButton onClick={props.onShowCart} />
       </header>
       <div className={classes["main-image"]}>
         <img src={mainheaderImage} alt="A table full of delicious food!" />
       </div>
+      <ToastContainer autoClose={3000} />
     </Fragment>
   );
 };

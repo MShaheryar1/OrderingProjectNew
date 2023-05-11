@@ -4,6 +4,7 @@ import classes from "./Cart.module.css";
 import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
 import OrderDelivered from "./OrderDelivered";
+import io from "socket.io-client";
 
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
@@ -17,7 +18,6 @@ const Cart = (props) => {
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, quantity: 1 });
   };
-
   const OrderHandler = async () => {
     const currentDate = new Date();
     const cartItems = cartCtx.items.map((item) => {
@@ -47,6 +47,8 @@ const Cart = (props) => {
       console.log(responseData);
 
       if (response.ok) {
+        const socket = io("http://localhost:3000");
+        socket.emit("newOrder");
         cartCtx.clearall();
         setShowOrder(true);
       } else {
