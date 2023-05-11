@@ -50,7 +50,6 @@ app.post("/login", (req, res) => {
     }
   });
 });
-
 app.post("/cart", (req, res) => {
   const cartItems = req.body;
   const values = cartItems.map((item) => [item.name, item.prices, item.amount]);
@@ -125,6 +124,10 @@ io.on("connection", (socket) => {
   socket.on("rejectOrder", (orderId) => {
     console.log(`Order ${orderId} has been rejected`);
     io.emit("orderRejected", orderId);
+  });
+  socket.on("newOrder", () => {
+    console.log(`You have a new Order `);
+    io.emit("newOrder");
   });
 });
 
