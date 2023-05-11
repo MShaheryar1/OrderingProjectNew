@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import classes from "./Orders.css";
+import "./Orders.css";
 import io from "socket.io-client";
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [currentDate, setCurrentDate] = useState();
-  const [notifications, setNotifications] = useState([]);
-  const [showNotification, setshowNotification] = useState(true); // initialize to false
   const socket = io("http://localhost:3000");
 
   const hourInMilliseconds = 1000 * 60 * 60;
@@ -68,53 +65,11 @@ function Orders() {
     (acc, order) => acc + order.prices * order.amount,
     0
   );
-  const newOrder = (orderId) => {
-    const message = `You have a new order`;
-    setNotifications((prevNotifications) => [
-      ...prevNotifications,
-      { id: orderId, message },
-      console.log(message),
-    ]);
-    setshowNotification(true);
-    toast.success(message);
-    setTimeout(() => {
-      setNotifications((prevNotifications) =>
-        prevNotifications.filter((notification) => notification.id !== orderId)
-      );
-    }, 3000);
-  };
 
-  const handleRemoveNotification = (notificationId) => {
-    setNotifications((prevNotifications) =>
-      prevNotifications.filter(
-        (notification) => notification.id !== notificationId
-      )
-    );
-  };
-  useEffect(() => {
-    const socket = io("http://localhost:3000");
-    socket.on("newOrder", newOrder);
-    return () => {
-      socket.off("newOrder", newOrder);
-      socket.disconnect();
-    };
-  }, []);
-  const notificationList = notifications.map((notification) => (
-    <div
-      key={notification.id}
-      onClick={() => handleRemoveNotification(notification.id)}
-    >
-      {notification.message}
-    </div>
-  ));
   return (
     <div className="orders-container">
       <h1>ORDERS</h1>
-      <div className={classes["notification-container"]}>
-        {showNotification && (
-          <div className={classes["notification-list"]}>{notificationList}</div>
-        )}
-      </div>
+
       <div className="order-sale">
         Sale:{" "}
         {totalAmount.toLocaleString("en-GB", {
@@ -179,7 +134,6 @@ function Orders() {
           </tbody>
         </table>
       )}
-      <ToastContainer autoClose={3000} />
     </div>
   );
 }
