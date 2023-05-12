@@ -4,6 +4,7 @@ import "./Orders.css";
 import io from "socket.io-client";
 import "react-toastify/dist/ReactToastify.css";
 
+//order function fetching the orders
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [currentDate, setCurrentDate] = useState();
@@ -22,6 +23,8 @@ function Orders() {
       });
   }, []);
   console.log(orders);
+
+  //this hook removes data when new day starts
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentDate(new Date());
@@ -36,7 +39,7 @@ function Orders() {
       setOrders([]);
     }
   }, [currentDate]);
-
+  //accept order handler
   const handleAccept = (orderId) => {
     const updatedOrders = orders.map((order) => {
       if (order.OrderId === orderId) {
@@ -48,7 +51,7 @@ function Orders() {
     setOrders(updatedOrders);
     socket.emit("acceptOrder", orderId);
   };
-
+  //reject ordeer handler
   const handleReject = (orderId) => {
     const updatedOrders = orders.map((order) => {
       if (order.OrderId === orderId) {
