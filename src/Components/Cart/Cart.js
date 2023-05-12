@@ -7,19 +7,30 @@ import OrderDelivered from "./OrderDelivered";
 import io from "socket.io-client";
 
 const Cart = (props) => {
+  // Get the cart context and order status from the state
   const cartCtx = useContext(CartContext);
   const [ShowOrder, setShowOrder] = useState(false);
+  // Calculate the total amount of the items in the cart
   const totalAmount = `£${cartCtx.totalAmount.toFixed(2)}`;
 
+  // Check if there are items in the cart
   const hasItems = cartCtx.items.length > 0;
+
+  // Remove an item from the cart
   const cartItemRemoveHandler = (id) => {
     cartCtx.removeItem(id);
   };
+
+  // Add an item to the cart
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, quantity: 1 });
   };
+
+  // Handle the order placement
   const OrderHandler = async () => {
+    // Get the current date
     const currentDate = new Date();
+    // Map the items in the cart to the format required by the server
     const cartItems = cartCtx.items.map((item) => {
       return {
         name: item.name,
@@ -32,6 +43,7 @@ const Cart = (props) => {
     console.log(cartItems);
 
     try {
+      // Send the order data to the server
       const response = await fetch("http://localhost:3000/cart", {
         method: "POST",
         headers: {
@@ -46,6 +58,7 @@ const Cart = (props) => {
 
       console.log(responseData);
 
+      // If the order was successful, emit a signal to the server and clear the cart
       if (response.ok) {
         const socket = io("http://localhost:3000");
         socket.emit("newOrder");
@@ -59,6 +72,7 @@ const Cart = (props) => {
     }
   };
 
+  // Generate a list of cart items
   const cartItems = (
     <ul className={classes["Cart-items"]}>
       {cartCtx.items.map((item) => (
@@ -75,6 +89,7 @@ const Cart = (props) => {
     </ul>
   );
 
+  // Render the cart component
   return (
     <Modal onClose={props.onClose}>
       {!ShowOrder ? (
