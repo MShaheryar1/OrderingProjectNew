@@ -15,7 +15,7 @@ const io = require("socket.io")(server, {
 
 app.use(cors());
 app.use(express.json());
-
+//Database Connection
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -23,7 +23,7 @@ const db = mysql.createConnection({
   database: "user",
   timezone: "Europe/London",
 });
-
+//SignUp end point
 app.post("/signup", (req, res) => {
   const sql = "INSERT INTO login(`name`, `email`, `password`) VALUES (?, ?, ?)";
   const values = [req.body.name, req.body.email, req.body.password];
@@ -35,6 +35,7 @@ app.post("/signup", (req, res) => {
   });
 });
 
+//Login Endpoint
 app.post("/login", (req, res) => {
   const sql = "SELECT * FROM login WHERE `email` = ? AND `password` = ?";
   db.query(sql, [req.body.email, req.body.password], (err, data) => {
@@ -50,6 +51,8 @@ app.post("/login", (req, res) => {
     }
   });
 });
+
+//Adding to the orders table endpoint
 app.post("/cart", (req, res) => {
   const cartItems = req.body;
   const values = cartItems.map((item) => [item.name, item.prices, item.amount]);
@@ -79,6 +82,7 @@ app.post("/cart", (req, res) => {
   });
 });
 
+// Getting orders table data
 app.get("/orders", (req, res) => {
   const sql = "SELECT * FROM orders";
   db.query(sql, (err, data) => {
@@ -90,6 +94,7 @@ app.get("/orders", (req, res) => {
     return res.json({ success: true, data });
   });
 });
+// Updating orders table data when order accepted
 app.post("/Orders/:id/accept", (req, res) => {
   const orderId = req.params.Orderid;
   const sql = "UPDATE orders SET status = 'accepted' WHERE id = ?";
@@ -103,6 +108,7 @@ app.post("/Orders/:id/accept", (req, res) => {
   });
 });
 
+// Updating orders table data when order rejected
 app.post("/orders/:id/reject", (req, res) => {
   const orderId = req.params.id;
   const sql = "UPDATE orders SET status = 'rejected' WHERE id = ?";
@@ -115,6 +121,7 @@ app.post("/orders/:id/reject", (req, res) => {
     return res.json({ success: true });
   });
 });
+//WebSocket connection for accept/reject and new order alert
 io.on("connection", (socket) => {
   socket.on("acceptOrder", (orderId) => {
     console.log(`Order ${orderId} has been accepted`);
